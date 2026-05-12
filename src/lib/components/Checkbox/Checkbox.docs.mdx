@@ -1,0 +1,84 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as CheckboxStories from './Checkbox.stories';
+
+<Meta of={CheckboxStories} name="Docs" />
+
+<Title>Checkbox</Title>
+
+<Subtitle>
+  A styled native checkbox with a label, registered as the `garnet-checkbox`
+  custom element. Supports two-way `checked` binding and a `disabled` state.
+</Subtitle>
+
+## Overview
+
+`Checkbox` wraps a native `<input type="checkbox">` with a `<label>`. The
+checked state is kept in sync via `bind:checked` and an `on:change` handler. It
+is compiled as `<garnet-checkbox>` using
+`<svelte:options customElement="garnet-checkbox" />`.
+
+The input uses a fixed `id` of `name` and the label uses `for="name"`, so the
+label stays associated with the control. If you mount **multiple** checkboxes
+on the same page, duplicate IDs are invalid HTML and can confuse assistive
+technology; consider giving each instance a unique `id`/`for` pair in the
+component source when you need more than one.
+
+## Default
+
+<Canvas of={CheckboxStories.Default} />
+
+## Props
+
+<Controls of={CheckboxStories.Default} />
+
+| Prop       | Type      | Default      | Description                                                                 |
+| ---------- | --------- | ------------ | ----------------------------------------------------------------------------- |
+| `label`    | `string`  | `'Checkbox'` | Text shown next to the checkbox.                                              |
+| `checked`  | `boolean` | `false`      | Whether the box is checked. Supports `bind:checked`.                          |
+| `disabled` | `boolean` | `false`      | When `true`, the checkbox cannot be toggled and uses a muted, not-allowed style. |
+
+## Examples
+
+### Custom label
+
+<Canvas of={CheckboxStories.WithLabel} />
+
+### Checked
+
+<Canvas of={CheckboxStories.Checked} />
+
+### Disabled
+
+<Canvas of={CheckboxStories.Disabled} />
+
+### Checked and disabled
+
+<Canvas of={CheckboxStories.CheckedDisabled} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Checkbox from '$lib/components/Checkbox/Checkbox.svelte';
+
+  let agreed = false;
+</script>
+
+<Checkbox label="I agree to the terms" bind:checked={agreed} />
+```
+
+## Usage as a custom element
+
+After the bundle is loaded, you can use the element in plain HTML. Boolean props
+are typically reflected as presence attributes:
+
+```html
+<garnet-checkbox label="Remember me" checked disabled></garnet-checkbox>
+```
+
+## Accessibility
+
+- The visible label is wired to the input via `for`/`id` (both currently `name`).
+- When `disabled` is `true`, the native `disabled` attribute is set on the
+  input, which removes it from the tab order and prevents toggling.
