@@ -1,0 +1,94 @@
+import { Meta, Title, Subtitle, Description, Primary, Controls, Canvas, Story } from '@storybook/addon-docs/blocks';
+
+import * as InputStories from './Input.stories';
+
+<Meta of={InputStories} name="Docs" />
+
+<Title>Input</Title>
+
+<Subtitle>
+  A simple text input registered as the `garnet-input` custom element. Supports a
+  label, placeholder, name, disabled state, and two-way `value` binding.
+</Subtitle>
+
+## Overview
+
+`Input` is a thin wrapper around a native `<input type="text">` that renders an
+optional `<label>` and exposes its value through Svelte's `bind:value`. It is
+compiled as a custom element (`<garnet-input>`) via
+`<svelte:options customElement="garnet-input" />`, so it can be used both inside
+Svelte components and as a plain HTML tag.
+
+## Default
+
+<Canvas of={InputStories.Default} />
+
+## Props
+
+<Controls of={InputStories.Default} />
+
+| Prop          | Type                  | Default                 | Description                                                    |
+| ------------- | --------------------- | ----------------------- | -------------------------------------------------------------- |
+| `label`       | `string`              | `'Label'`               | Text rendered inside the `<label>` element. Hidden when empty. |
+| `placeholder` | `string`              | `'default placeholder'` | Native `placeholder` attribute on the input.                   |
+| `inputName`   | `string`              | `''`                    | Native `name` attribute. Used when submitting via a form.      |
+| `fieldID`     | `string`              | `''`                    | `id` of the input. The label's `for` points at this value.     |
+| `disabled`    | `boolean`             | `false`                 | When `true`, disables interaction and applies a not-allowed cursor. |
+| `value`       | `string \| undefined` | `undefined`             | The current input value. Supports `bind:value`.                |
+
+## Examples
+
+### With a label
+
+A typical labelled input. The `fieldID` is reused as the `for`/`id` pair so the
+label is correctly associated with the input.
+
+<Canvas of={InputStories.WithLabel} />
+
+### Disabled
+
+Use `disabled` to prevent user interaction. The cursor changes to
+`not-allowed` automatically.
+
+<Canvas of={InputStories.Disabled} />
+
+### Prefilled value
+
+Pass a `value` to render the input with an initial string. In Svelte you can
+two-way bind to it:
+
+```svelte
+<script lang="ts">
+  import Input from '$lib/components/Input/Input.svelte';
+
+  let email = 'hello@garnetui.dev';
+</script>
+
+<Input label="Email" fieldID="email-field" bind:value={email} />
+```
+
+<Canvas of={InputStories.Prefilled} />
+
+## Usage as a custom element
+
+Because `Input.svelte` declares `customElement="garnet-input"`, it can be used
+in any HTML context after the bundle is loaded:
+
+```html
+<garnet-input
+  label="Username"
+  placeholder="Enter your username"
+  inputname="username"
+  fieldid="username-field"
+></garnet-input>
+```
+
+> Custom element attributes are lowercase, so `inputName` becomes `inputname`
+> and `fieldID` becomes `fieldid` when used from HTML.
+
+## Accessibility
+
+- Always provide a non-empty `label` together with a unique `fieldID` so screen
+  readers can associate the label with the input.
+- When the input is `disabled`, the underlying `<input>` receives the native
+  `disabled` attribute, which removes it from the tab order automatically.
