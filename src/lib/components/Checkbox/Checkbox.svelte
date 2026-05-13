@@ -1,7 +1,7 @@
 <svelte:options customElement="garnet-checkbox" />
 
 <script lang="ts">
-  export let label = "Checkbox";
+  export let label = 'Checkbox';
   export let checked = false;
   export let disabled = false;
 
@@ -11,13 +11,7 @@
 </script>
 
 <div class="garnet-checkbox">
-  <input
-    type="checkbox"
-    bind:checked
-    id="name"
-    {disabled}
-    on:change={onChange}
-  />
+  <input type="checkbox" bind:checked id="name" {disabled} on:change={onChange} />
   <label for="name">
     {label}
   </label>
@@ -29,7 +23,7 @@
     align-items: center;
     font-family: Arial, Helvetica, sans-serif;
   }
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     -webkit-appearance: none;
     appearance: none;
     margin: 0;
@@ -43,8 +37,8 @@
     display: grid;
     place-content: center;
   }
-  input[type="checkbox"]::before {
-    content: "";
+  input[type='checkbox']::before {
+    content: '';
     width: 10px;
     height: 10px;
     clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
@@ -53,10 +47,10 @@
     transition: 120ms transform ease-in-out;
     box-shadow: inset 16px 16px #733635;
   }
-  input[type="checkbox"]:checked::before {
+  input[type='checkbox']:checked::before {
     transform: scale(1);
   }
-  input[type="checkbox"]:disabled {
+  input[type='checkbox']:disabled {
     color: #959495;
     cursor: not-allowed;
     opacity: 0.4;

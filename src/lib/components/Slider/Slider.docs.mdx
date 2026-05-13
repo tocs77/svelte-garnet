@@ -1,0 +1,87 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as SliderStories from './Slider.stories';
+
+<Meta of={SliderStories} name="Docs" />
+
+<Title>Slider</Title>
+
+<Subtitle>
+  A native range control with a label and optional tick marks, registered as the
+  `garnet-slider` custom element. The current position is `val`, bound with
+  `bind:value` on the underlying `<input type="range">`.
+</Subtitle>
+
+## Overview
+
+`Slider` wraps a `<label>` and `<input type="range">` inside `.garnet-slider`,
+shows the live value under `.selectedValue`, and optionally renders three tick
+labels when `ticks` is `true`: `min`, `max / 2`, and `max` (see `Slider.svelte`).
+
+The default `id` is `sliderChoice`, which is reused for `name` on the range
+input. If you mount **multiple** sliders on one page, give each instance a
+unique `id` so labels stay correct and IDs stay valid.
+
+Styles come from `Slider.css` imported next to the component.
+
+## Default
+
+<Canvas of={SliderStories.Default} />
+
+## Props
+
+<Controls of={SliderStories.Default} />
+
+| Prop       | Type      | Default                    | Description                                                                 |
+| ---------- | --------- | -------------------------- | ----------------------------------------------------------------------------- |
+| `id`       | `string`  | `'sliderChoice'`           | `id` and `name` of the range input; the label’s `for` matches this value.     |
+| `min`      | `number`  | `0`                        | Minimum value of the range.                                                   |
+| `max`      | `number`  | `100`                      | Maximum value of the range.                                                   |
+| `step`     | `number`  | `1`                        | Step increment between valid values.                                          |
+| `val`      | `number`  | `50`                       | Current value. Use `bind:val` for two-way binding from Svelte.                |
+| `disabled` | `boolean` | `false`                    | When `true`, the range cannot be adjusted.                                    |
+| `ticks`    | `boolean` | `false`                    | When `true`, shows three tick spans under the track (`min`, midpoint, `max`). |
+| `label`    | `string`  | `'Please select a value'`  | Text shown in the `<label>` above the slider.                                 |
+
+## Examples
+
+### Custom label and value
+
+<Canvas of={SliderStories.WithLabel} />
+
+### Custom min, max, and step
+
+<Canvas of={SliderStories.CustomRange} />
+
+### Disabled
+
+<Canvas of={SliderStories.Disabled} />
+
+### With tick marks
+
+<Canvas of={SliderStories.WithTicks} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Slider from '$lib/components/Slider/Slider.svelte';
+
+  let level = 42;
+</script>
+
+<Slider id="volume" label="Volume" min={0} max={100} step={1} bind:val={level} />
+```
+
+## Usage as a custom element
+
+`<garnet-slider>` comes from `customElement="garnet-slider"`. Numeric props are
+usually serialized as strings on attributes; prefer Svelte or JS property
+assignment for reliable `min` / `max` / `step` / `val` wiring, depending on your
+custom-element build.
+
+## Accessibility
+
+- The visible `<label>` is associated with the range input via `for` / `id`.
+- When `disabled` is `true`, the native `disabled` attribute is set on the
+  input, which removes it from the tab order and blocks changes.
