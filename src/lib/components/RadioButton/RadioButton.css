@@ -15,7 +15,6 @@ label {
 }
 
 input[type="radio"] {
-  -webkit-appearance: none;
   appearance: none;
   margin: 0 5px;
   font: inherit;

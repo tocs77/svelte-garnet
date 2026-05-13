@@ -1,0 +1,32 @@
+{
+  "extends": "stylelint-config-standard-scss",
+  "plugins": [
+    "stylelint-scss"
+  ],
+  "rules": {
+    "selector-class-pattern": null,
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": [
+          "global"
+        ]
+      }
+    ],
+    "property-no-unknown": [
+      true,
+      {
+        "ignoreProperties": [
+          "user-drag"
+        ]
+      }
+    ],
+    "alpha-value-notation": "number",
+    "declaration-block-no-redundant-longhand-properties": null,
+    "value-keyword-case": null,
+    "no-descending-specificity": null
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": "explicit"
+  }
+}

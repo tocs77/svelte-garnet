@@ -1,0 +1,56 @@
+.garnet-spinner {
+  display: flex;
+}
+
+/* circle spinner */
+.circle {
+  height: var(--size);
+  width: var(--size);
+  border-color: var(--color) transparent var(--color) var(--color);
+  border-width: calc(var(--size) / 12);
+  border-style: solid;
+  border-radius: 50%;
+  animation: var(--duration) linear 0s infinite normal none running rotate-circle;
+}
+
+@keyframes rotate-circle {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.jumper-wrap {
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+}
+
+.jumper {
+  height: var(--size);
+  width: var(--size);
+  border-radius: 100%;
+  position: absolute;
+  opacity: 0;
+  background-color: var(--color);
+  animation: bounce var(--duration) linear infinite both;
+}
+
+@keyframes bounce {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  5% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}

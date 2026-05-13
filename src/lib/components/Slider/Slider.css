@@ -5,7 +5,6 @@
 }
 
 .garnet-slider input[type='range'] {
-  -webkit-appearance: none;
   appearance: none;
   width: 100%;
   cursor: pointer;
@@ -13,11 +12,10 @@
   border-radius: 15px;
   height: 6px;
   background: #ccc;
-  margin: 20px 0 0 0;
+  margin: 20px 0 0;
 }
 
 .garnet-slider input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none;
   appearance: none;
   height: 15px;
   width: 15px;
@@ -37,27 +35,27 @@
 }
 
 .garnet-slider input[type='range']::-webkit-slider-thumb:hover {
-  box-shadow: 0 0 0 10px rgba(115, 54, 53, 0.1);
+  box-shadow: 0 0 0 10px rgb(115 54 53 / 0.1);
 }
 
 .garnet-slider input[type='range']:active::-webkit-slider-thumb {
-  box-shadow: 0 0 0 13px rgba(115, 54, 53, 0.2);
+  box-shadow: 0 0 0 13px rgb(115 54 53 / 0.2);
 }
 
 .garnet-slider input[type='range']:focus::-webkit-slider-thumb {
-  box-shadow: 0 0 0 13px rgba(115, 54, 53, 0.2);
+  box-shadow: 0 0 0 13px rgb(115 54 53 / 0.2);
 }
 
 .garnet-slider input[type='range']::-moz-range-thumb:hover {
-  box-shadow: 0 0 0 10px rgba(115, 54, 53, 0.1);
+  box-shadow: 0 0 0 10px rgb(115 54 53 / 0.1);
 }
 
 .garnet-slider input[type='range']:active::-moz-range-thumb {
-  box-shadow: 0 0 0 13px rgba(115, 54, 53, 0.2);
+  box-shadow: 0 0 0 13px rgb(115 54 53 / 0.2);
 }
 
 .garnet-slider input[type='range']:focus::-moz-range-thumb {
-  box-shadow: 0 0 0 13px rgba(115, 54, 53, 0.2);
+  box-shadow: 0 0 0 13px rgb(115 54 53 / 0.2);
 }
 
 .garnet-slider .sliderticks {
@@ -87,5 +85,5 @@
 .garnet-slider input[type='range']:disabled::-moz-range-track,
 .garnet-slider input[type='range']:disabled::-webkit-slider-thumb,
 .garnet-slider input[type='range']:disabled::-moz-range-thumb {
-  background: rgb(115, 54, 53);
+  background: rgb(115 54 53);
 }

@@ -1,0 +1,144 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as SpinnerStories from './Spinner.stories';
+
+<Meta of={SpinnerStories} name="Docs" />
+
+<Title>Spinner</Title>
+
+<Subtitle>
+  Loading indicators registered as the `garnet-spinner` custom element: a
+  rotating <strong>circle</strong> ring or a <strong>jumper</strong> pattern of
+  three pulsing dots. Size, color, and animation speed use CSS custom properties.
+</Subtitle>
+
+## Overview
+
+`Spinner` switches on `variant`:
+
+- **`circle`** — a `.circle` element with a partial border and the
+  `rotate-circle` keyframes.
+- **`jumper`** — three `.jumper` elements inside a `.jumper-wrap` container
+  (positioned box), each using the `bounce` keyframe animation with a staggered
+  delay.
+
+Both branches set inline `--size`, `--color`, and `--duration` for `Spinner.css`.
+
+`size` is a **string** (default `'60'`) and is suffixed with `px` in the markup.
+
+`variant` is an `export let` with type <code>'circle' | 'jumper'</code> (default
+<code>'circle'</code>). <code>unit</code> and <code>pause</code> are
+<code>export const</code> placeholders for future use.
+
+## Default (circle)
+
+<Canvas of={SpinnerStories.Default} />
+
+## Props
+
+<Controls of={SpinnerStories.Default} />
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>color</code></td>
+      <td><code>string</code></td>
+      <td><code>'#733635'</code></td>
+      <td>Accent color; passed to CSS as <code>--color</code>.</td>
+    </tr>
+    <tr>
+      <td><code>duration</code></td>
+      <td><code>string</code></td>
+      <td><code>'0.75s'</code></td>
+      <td>Animation timing; passed as <code>--duration</code> (e.g. <code>0.35s</code>, <code>1s</code>).</td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>string</code></td>
+      <td><code>'60'</code></td>
+      <td>Logical size; the <code>size</code> string is suffixed with <code>px</code> for <code>--size</code>.</td>
+    </tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'circle' | 'jumper'</code></td>
+      <td><code>'circle'</code></td>
+      <td>Which visual to render: rotating ring or three-dot jumper.</td>
+    </tr>
+    <tr>
+      <td><code>unit</code></td>
+      <td><code>string</code></td>
+      <td><code>'px'</code></td>
+      <td>Reserved (<code>export const</code>); size is currently always suffixed with <code>px</code>.</td>
+    </tr>
+    <tr>
+      <td><code>pause</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Reserved (<code>export const</code>); not wired to animation yet.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples (circle)
+
+### Large
+
+<Canvas of={SpinnerStories.Large} />
+
+### Faster rotation
+
+<Canvas of={SpinnerStories.Fast} />
+
+### Custom color
+
+<Canvas of={SpinnerStories.CustomColor} />
+
+### Compact and slower
+
+<Canvas of={SpinnerStories.Compact} />
+
+## Examples (jumper)
+
+### Jumper
+
+<Canvas of={SpinnerStories.Jumper} />
+
+### Jumper — large
+
+<Canvas of={SpinnerStories.JumperLarge} />
+
+### Jumper — custom color
+
+<Canvas of={SpinnerStories.JumperCustomColor} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Spinner from '$lib/components/Spinner/Spinner.svelte';
+</script>
+
+<Spinner size="48" color="#0f766e" duration="0.9s" variant="circle" />
+
+<Spinner size="40" color="#7c3aed" duration="1s" variant="jumper" />
+```
+
+## Usage as a custom element
+
+`<garnet-spinner>` comes from `customElement="garnet-spinner"`. Pass
+`variant="jumper"` or `variant="circle"` from HTML or set the property in
+JavaScript after upgrade, along with `size`, `color`, and `duration`.
+
+## Accessibility
+
+- The spinner is purely decorative unless you add copy or ARIA around it.
+- Continuous motion can be distracting; consider `prefers-reduced-motion` in
+  CSS or a paused state when you wire up `pause`.
