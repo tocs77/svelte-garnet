@@ -1,0 +1,92 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as RadioButtonStories from './RadioButton.stories';
+
+<Meta of={RadioButtonStories} name="Docs" />
+
+<Title>RadioButton</Title>
+
+<Subtitle>
+  A radio group inside a `<fieldset>`, registered as the `garnet-radiobutton`
+  custom element. Options come from `selectOptions`; the current choice is
+  `userSelected` with `bind:group` on each native radio input.
+</Subtitle>
+
+## Overview
+
+`RadioButton` renders a `<fieldset>` with a visible legend and one native
+`<input type="radio">` per entry in `selectOptions`. Each option has a
+`value` (submitted / bound) and a `label` (shown next to the control). IDs are
+derived from labels via `slugify` so each `<label for>` matches its input.
+
+The fieldset currently uses a fixed `id="garnet"`. If you place **multiple**
+instances on one page, duplicate IDs are invalid HTML; consider unique IDs per
+instance in the component when you need several groups.
+
+Styles are loaded from `RadioButton.css` next to the component.
+
+## Default
+
+<Canvas of={RadioButtonStories.Default} />
+
+## Props
+
+<Controls of={RadioButtonStories.Default} />
+
+| Prop            | Type                                       | Default                         | Description                                                                 |
+| --------------- | ------------------------------------------ | ------------------------------- | ----------------------------------------------------------------------------- |
+| `selectOptions` | `{ value: string; label: string }[]`       | Three `"Test slot"` placeholders | Options shown as radios. Each `value` must be unique within the group.        |
+| `legend`        | `string`                                   | `'Legend'`                      | Text shown in the group header (not a native `<legend>` element).             |
+| `disabled`      | `boolean`                                  | `false`                         | When `true`, the whole fieldset is disabled; radios cannot be changed.        |
+| `userSelected`  | `string`                                   | `selectOptions[0].value`        | The selected option’s `value`. Use `bind:userSelected` for two-way binding.   |
+
+## Examples
+
+### Custom legend and options
+
+<Canvas of={RadioButtonStories.WithLegend} />
+
+### Another option selected
+
+<Canvas of={RadioButtonStories.SecondSelected} />
+
+### Disabled
+
+<Canvas of={RadioButtonStories.Disabled} />
+
+### Disabled with a pre-selected value
+
+<Canvas of={RadioButtonStories.DisabledWithSelection} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import RadioButton from '$lib/components/RadioButton/RadioButton.svelte';
+
+  const options = [
+    { value: 'a', label: 'Option A' },
+    { value: 'b', label: 'Option B' },
+  ];
+
+  let choice = 'a';
+</script>
+
+<RadioButton legend="Choose one" selectOptions={options} bind:userSelected={choice} />
+```
+
+## Usage as a custom element
+
+`<garnet-radiobutton>` is emitted from `customElement="garnet-radiobutton"`.
+Passing an array like `selectOptions` from plain HTML is awkward (attributes
+are strings). Prefer using the component from Svelte, or set complex props via
+JavaScript after the element is upgraded, depending on how you bundle the
+custom element.
+
+## Accessibility
+
+- Radios share one `bind:group` (`userSelected`), which matches native radio
+  grouping behavior.
+- Each input is paired with a visible label via `for` / `id` (from `slugify(label)`).
+- When `disabled` is `true`, the attribute is applied to the `<fieldset>`,
+  disabling all radios in the group.
