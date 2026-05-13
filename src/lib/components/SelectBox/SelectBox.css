@@ -1,0 +1,22 @@
+.garnet-selectbox {
+  display: flex;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+label { 
+    padding-right: 10px; 
+}
+
+select 
+{
+  padding: 5px 100px 5px 5px;
+  font-size: 16px;
+  border: 1px solid #733635;
+  height: 34px;
+  border-radius: 10px;
+}
+  
+option:disabled {
+  cursor: not-allowed;
+}

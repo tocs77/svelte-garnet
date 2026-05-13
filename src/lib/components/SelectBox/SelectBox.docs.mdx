@@ -1,0 +1,106 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as SelectBoxStories from './SelectBox.stories';
+
+<Meta of={SelectBoxStories} name="Docs" />
+
+<Title>SelectBox</Title>
+
+<Subtitle>
+  A native `<select>` with options from `selectOptions`, registered as the
+  `garnet-selectbox` custom element. The chosen row is tracked by `index` and
+  mirrored into `selected` via a reactive statement.
+</Subtitle>
+
+## Overview
+
+`SelectBox` renders a `<label>` and `<select>`. Each `<option>` uses
+`value={i + 1}` (one-based position in the list). `index` is bound to that
+value, and `selected` is recomputed as the option whose `id` equals `index`:
+
+`selectOptions.find((option) => option.id === index)`.
+
+For this to line up, each option’s **`id` should match its 1-based index in
+the array** (first item `id: 1`, second `id: 2`, and so on). The stories follow
+that convention.
+
+Option text in the dropdown comes from `displayText(option)`; the default
+implementation shows `option.value` (the `label` field is still part of the
+type for your own use).
+
+The `<label for>` and `<select id>` are both hard-coded to `garnet-selectbox`.
+Using **more than one** `SelectBox` on the same document will duplicate IDs;
+consider making those configurable in the component when you need several
+instances.
+
+Styles are loaded from `SelectBox.css` next to the component.
+
+## Default
+
+<Canvas of={SelectBoxStories.Default} />
+
+## Props
+
+<Controls of={SelectBoxStories.Default} />
+
+| Prop            | Type                                                         | Default                         | Description                                                                 |
+| --------------- | ------------------------------------------------------------ | ------------------------------- | ----------------------------------------------------------------------------- |
+| `selectOptions` | `{ value: string; label: string; id: number }[]`           | `[]`                            | Rows in the select. Keep `id` aligned with each option’s 1-based position.    |
+| `displayText`   | `(option: SelectOption) => string`                           | `(a) => a.value`                | Renders the string shown for each `<option>`.                                 |
+| `index`         | `number`                                                     | `1`                             | One-based index of the current selection (matches `<option value>`).        |
+| `disabled`      | `boolean`                                                    | `false`                         | Passed to every `<option>` in the template (see `SelectBox.svelte`).          |
+| `selected`      | `SelectOption \| null`                                       | `null` (then derived)           | The matching option for `index`; updated by `$: selected = …`.              |
+| `label`         | `string`                                                     | `'Test dropdown:'`             | Text shown in the `<label>`.                                                  |
+
+`handleChange` updates `index` from the DOM `selectedIndex` (adjusted to
+one-based) when the user picks a new row.
+
+## Examples
+
+### Custom label
+
+<Canvas of={SelectBoxStories.WithLabel} />
+
+### Another option selected
+
+<Canvas of={SelectBoxStories.SecondSelected} />
+
+### Disabled
+
+<Canvas of={SelectBoxStories.Disabled} />
+
+### Disabled with a pre-selected value
+
+<Canvas of={SelectBoxStories.DisabledWithSelection} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import SelectBox from '$lib/components/SelectBox/SelectBox.svelte';
+
+  const options = [
+    { id: 1, value: 'one', label: 'First' },
+    { id: 2, value: 'two', label: 'Second' },
+  ];
+
+  let index = 1;
+</script>
+
+<SelectBox label="Pick one" selectOptions={options} bind:index />
+```
+
+## Usage as a custom element
+
+`<garnet-selectbox>` comes from `customElement="garnet-selectbox"`. Arrays and
+functions (`selectOptions`, `displayText`) are awkward to set from plain HTML
+attributes; prefer Svelte or assigning properties in JavaScript after the
+element is defined.
+
+## Accessibility
+
+- The control has a visible `<label>`. The label uses `for="garnet-selectbox"`;
+  the `<select>` should expose a matching `id` for full label–control
+  association (see `SelectBox.svelte`).
+- When `disabled` is `true`, each `<option>` receives the `disabled` attribute
+  in the current implementation.
