@@ -1,0 +1,153 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as AccordionStories from './Accordion.stories';
+
+<Meta of={AccordionStories} name="Docs" />
+
+<Title>Accordion</Title>
+
+<Subtitle>
+  A vertical stack of expandable sections, registered as the
+  <code>garnet-accordion</code> custom element. In Storybook it is grouped under
+  <strong>Action Components → Accordion</strong>. Content is driven by a
+  <code>data</code> array; each row becomes an <code>AccordionItem</code>
+  (<code>garnet-accordionitem</code>) with a button header and a sliding panel.
+  Optional <code>defaultOpen</code> sets the initial open state for every item.
+</Subtitle>
+
+## Overview
+
+`Accordion` imports `accordiondata.json` as the default for <code>data</code>,
+then renders one <code>AccordionItem</code> per entry. Each item receives
+<code>title</code> and <code>entry</code> (plain text) and wraps the same text
+in a default <strong>slot</strong> (for example a <code>&lt;p&gt;</code> in the
+current implementation). <code>AccordionItem</code> shows slot content when the parent provides children,
+and otherwise falls back to the <code>entry</code> string inside the panel.
+
+<code>defaultOpen</code> is forwarded to each item as <code>isOpen</code>, so
+when <code>true</code> every section starts expanded; users can still collapse
+them with the toggle button.
+
+Panel open/close uses <code>slide</code> from <code>svelte/transition</code> on
+the list wrapper. Styles live in each component’s <code>&lt;style&gt;</code>
+block.
+
+## Default
+
+<Canvas of={AccordionStories.Default} />
+
+## Props
+
+<Controls of={AccordionStories.Default} />
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>data</code></td>
+      <td><code>AccordionData[]</code></td>
+      <td>Contents of <code>accordiondata.json</code></td>
+      <td>
+        Each item has <code>title</code> (header label) and <code>text</code>
+        (body copy passed to <code>entry</code> and the slotted paragraph).
+      </td>
+    </tr>
+    <tr>
+      <td><code>defaultOpen</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>
+        When <code>true</code>, each <code>AccordionItem</code> receives
+        <code>isOpen={true}</code> on first render so all panels start open.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+### <code>AccordionData</code>
+
+Exported from <code>Accordion.svelte</code> (module script):
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>title</code></td>
+      <td><code>string</code></td>
+      <td>Shown on the item’s toggle button.</td>
+    </tr>
+    <tr>
+      <td><code>text</code></td>
+      <td><code>string</code></td>
+      <td>Panel body text (prop and slot source in the default accordion).</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Initially open
+
+<Canvas of={AccordionStories.InitiallyOpen} />
+
+### Two sections
+
+<Canvas of={AccordionStories.TwoSections} />
+
+### Single section
+
+<Canvas of={AccordionStories.SingleSection} />
+
+### Long content
+
+<Canvas of={AccordionStories.LongContent} />
+
+### Many panels
+
+<Canvas of={AccordionStories.ManyPanels} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Accordion, { type AccordionData } from '$lib/components/Accordion/Accordion.svelte';
+
+  const data: AccordionData[] = [
+    { title: 'Question', text: 'Answer copy goes here.' },
+  ];
+</script>
+
+<Accordion {data} />
+
+<Accordion {data} defaultOpen />
+```
+
+## Usage as a custom element
+
+<code>garnet-accordion</code> and nested <code>garnet-accordionitem</code> come
+from the respective <code>customElement</code> options. Feeding complex
+<code>data</code> from raw HTML is usually impractical; prefer Svelte or
+setting properties in JavaScript after the elements are defined. You can set
+<code>defaultOpen</code> the same way when your custom-element build exposes it
+as a property.
+
+## Accessibility
+
+- Each header is a <code>&lt;button&gt;</code> with <code>aria-expanded</code>
+  reflecting open state.
+- For stronger region semantics you can later wire
+  <code>id</code>/<code>aria-controls</code> between the button and the
+  expanded panel.
