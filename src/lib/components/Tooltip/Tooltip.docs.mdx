@@ -1,0 +1,149 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as TooltipStories from './Tooltip.stories';
+
+<Meta of={TooltipStories} name="Docs" />
+
+<Title>Tooltip</Title>
+
+<Subtitle>
+  Contextual help control registered as the `garnet-tooltip` custom element. In Storybook it is grouped
+  under <strong>Action Components → Tooltip</strong>. A circular **?** trigger opens a positioned panel
+  on hover (after `timeout` ms), click, or keyboard focus. The tip is linked via `aria-describedby` when
+  visible. Press Escape to dismiss and blur the trigger.
+</Subtitle>
+
+## Overview
+
+`Tooltip` renders inside `.garnet-tooltip`. The trigger is a `<button type="button">` with class
+`trigger`. Hovering enters a delayed show (`timeout`); leaving starts a delayed hide unless the pointer
+moves into the tooltip panel, which cancels the hide timer. Click sets the tooltip open immediately.
+When `active` is `true`, a `div` with `role="tooltip"` appears below the trigger (`transition:fade`).
+Content is plain text unless `showHtml` is `true`, in which case `tip` is rendered with `{@html}`.
+
+Styles live in the component `<style>` block next to `Tooltip.svelte`.
+
+## Default
+
+<Canvas of={TooltipStories.Default} />
+
+## Props
+
+<Controls of={TooltipStories.Default} />
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>id</code></td>
+      <td><code>string</code></td>
+      <td><code>'tooltip'</code></td>
+      <td>
+        <code>id</code> on the tooltip panel; used for <code>aria-describedby</code> on the trigger
+        while the tip is visible.
+      </td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>
+        Accessible name via <code>aria-label</code> on the tooltip region. Required.
+      </td>
+    </tr>
+    <tr>
+      <td><code>tip</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>
+        Body text, or HTML when <code>showHtml</code> is <code>true</code>. Required.
+      </td>
+    </tr>
+    <tr>
+      <td><code>timeout</code></td>
+      <td><code>number</code></td>
+      <td><code>400</code></td>
+      <td>
+        Delay in milliseconds before show on pointer enter and before hide on pointer leave.
+      </td>
+    </tr>
+    <tr>
+      <td><code>showHtml</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>
+        When <code>true</code>, renders <code>tip</code> with Svelte <code>@html</code> instead of
+        escaped text.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Fast open
+
+<Canvas of={TooltipStories.FastOpen} />
+
+### Slow open
+
+<Canvas of={TooltipStories.SlowOpen} />
+
+### With HTML
+
+<Canvas of={TooltipStories.WithHtml} />
+
+### Long tip
+
+<Canvas of={TooltipStories.LongTip} />
+
+### Custom id
+
+<Canvas of={TooltipStories.CustomId} />
+
+### Custom label
+
+<Canvas of={TooltipStories.CustomLabel} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Tooltip from '$lib/components/Tooltip/Tooltip.svelte';
+</script>
+
+<Tooltip
+  id="password-help"
+  label="Password requirements"
+  tip="Use at least 12 characters with letters, numbers, and symbols."
+/>
+
+<Tooltip
+  label="Formatted help"
+  tip="<strong>Note:</strong> Billing runs at month end."
+  showHtml
+  timeout={0}
+/>
+```
+
+## Usage as a custom element
+
+`<garnet-tooltip>` comes from `customElement="garnet-tooltip"`. Set `id`, `label`, `tip`, `timeout`, and
+`showHtml` as properties on the element. Visibility is managed internally; the trigger and tooltip panel
+are part of the component markup.
+
+## Accessibility
+
+- The trigger uses `aria-describedby` pointing at the tooltip `id` only while the tip is visible.
+- The tooltip region uses `role="tooltip"` and `aria-label={label}`.
+- Escape closes the tooltip and moves focus off the trigger via `blur()`.
+- Pointer handlers live on the same element as `role="tooltip"`, satisfying Svelte’s static-element
+  interaction rules.
+- When using `showHtml`, only pass trusted markup; `{@html}` does not sanitize content.
