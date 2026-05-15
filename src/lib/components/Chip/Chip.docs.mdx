@@ -1,0 +1,93 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as ChipStories from './Chip.stories';
+
+<Meta of={ChipStories} name="Docs" />
+
+<Title>Chip</Title>
+
+<Subtitle>
+  Compact label or filter pill, registered as the `garnet-chip` custom element. In Storybook it is
+  grouped under <strong>Navigation → Chip</strong>. The visible text comes from `chipContent`. The main
+  area is keyboard-activatable (`role="button"`, Enter and Space) and forwards `click` to the host; an
+  optional remove control uses a real `<button>` with `aria-label="Remove"` and the `mdi:delete` icon.
+</Subtitle>
+
+## Overview
+
+`Chip` renders inside `.garnet-chip`. When `active` is `true`, a pill-shaped `.chip` row shows
+`chipContent` inside `.chip-trigger`. Toggling `selected` or `outline` adds the matching classes
+(rose fill for selected, white fill and border for outline). When the `close` prop is `true`, a remove
+button appears beside the label; choosing it sets `active` to `false`, which unmounts the pill until
+you reset `active` from the parent (for example via Storybook controls).
+
+Styles live in the component `<style>` block next to `Chip.svelte`.
+
+## Default
+
+<Canvas of={ChipStories.Default} />
+
+## Props
+
+<Controls of={ChipStories.Default} />
+
+| Prop           | Type      | Default | Description                                                                 |
+| -------------- | --------- | ------- | ----------------------------------------------------------------------------- |
+| `active`       | `boolean` | `true`  | When `false`, the chip body is not rendered (for example after remove).       |
+| `close`        | `boolean` | `false` | When `true`, shows the remove button next to the label.                      |
+| `chipContent`  | `string`  | `''`    | Text shown in the chip.                                                       |
+| `selected`     | `boolean` | `false` | Applies the selected background styling.                                      |
+| `outline`      | `boolean` | `false` | Applies outlined (white background, border) styling.                        |
+
+## Examples
+
+### With label
+
+<Canvas of={ChipStories.WithLabel} />
+
+### With remove control
+
+<Canvas of={ChipStories.WithClose} />
+
+### Selected
+
+<Canvas of={ChipStories.Selected} />
+
+### Outline
+
+<Canvas of={ChipStories.Outline} />
+
+### Selected and outline
+
+<Canvas of={ChipStories.SelectedOutline} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Chip from '$lib/components/Chip/Chip.svelte';
+
+  let active = true;
+</script>
+
+<Chip chipContent="React" />
+
+<Chip chipContent="Svelte" selected />
+
+<Chip chipContent="Tags" outline close bind:active />
+```
+
+## Usage as a custom element
+
+`<garnet-chip>` comes from `customElement="garnet-chip"`. Boolean props are often reflected as
+attributes; for predictable behavior (especially `bind:active` patterns), prefer Svelte or assigning
+properties in JavaScript after the element is defined.
+
+## Accessibility
+
+- The main label uses `role="button"`, `tabindex="0"`, `on:click`, and a key handler so Enter and Space
+  match a click (Space uses `preventDefault` to avoid scrolling the page).
+- The remove action is a native `<button type="button">` with `aria-label="Remove"`, separate from the
+  main control so there is no nested button inside a `<button>`.
+- Listen for `click` on `<garnet-chip>` or the inner trigger from your app when you need selection or
+  toggle behavior.
