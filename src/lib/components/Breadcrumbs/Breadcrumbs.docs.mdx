@@ -1,0 +1,159 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as BreadcrumbsStories from './Breadcrumbs.stories';
+
+<Meta of={BreadcrumbsStories} name="Docs" />
+
+<Title>Breadcrumbs</Title>
+
+<Subtitle>
+  Inline navigation trail, registered as the <code>garnet-breadcrumbs</code> custom element. In
+  Storybook it appears under <strong>Action Components → Breadcrumbs</strong>. Items come from the{' '}
+  <code>breadcrumbItems</code> array: every segment except the last is rendered as a link; the final
+  segment is plain text for the current page. Between segments you can show a text <code>divider</code>{' '}
+  or an Iconify icon when <code>iconFamily</code> and <code>iconName</code> are both set.
+</Subtitle>
+
+## Overview
+
+The component maps <code>breadcrumbItems</code> to a single horizontal <code>&lt;ul&gt;</code>. For each
+item after the first, it inserts either a <code>&lt;span&gt;</code> with <code>divider</code> (default{' '}
+<code>/</code>) or an <code>&lt;Icon&gt;</code> from <code>@iconify/svelte</code> using the{' '}
+<code>{'{iconFamily}:{iconName}'}</code> pattern (see [Iconify icon sets](https://icon-sets.iconify.design/)).
+If either <code>iconFamily</code> or <code>iconName</code> is empty, the text divider path is used; for a
+reliable icon divider, set both props.
+
+Intermediate items use <code>&lt;a href&gt;</code> with <code>data-testid="breadcrumbLink"</code> on each
+link. Styles (colors, list layout) live in the component <code>&lt;style&gt;</code> block.
+
+## Default
+
+<Canvas of={BreadcrumbsStories.Default} />
+
+## Props
+
+<Controls of={BreadcrumbsStories.Default} />
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>breadcrumbItems</code></td>
+      <td><code>{'{ text: string; href: string }[]'}</code></td>
+      <td><code>[]</code></td>
+      <td>
+        Ordered trail. Non-last entries become links using <code>href</code>; the last entry’s{' '}
+        <code>text</code> only is shown (current page). <code>href</code> on the last item is ignored for
+        navigation but may still be passed for consistency.
+      </td>
+    </tr>
+    <tr>
+      <td><code>divider</code></td>
+      <td><code>string</code></td>
+      <td><code>'/'</code></td>
+      <td>
+        Shown between items when both <code>iconFamily</code> and <code>iconName</code> are empty.
+      </td>
+    </tr>
+    <tr>
+      <td><code>iconFamily</code></td>
+      <td><code>string</code></td>
+      <td><code>''</code></td>
+      <td>
+        Iconify prefix (for example <code>mdi</code>). Used together with <code>iconName</code> for
+        divider icons.
+      </td>
+    </tr>
+    <tr>
+      <td><code>iconName</code></td>
+      <td><code>string</code></td>
+      <td><code>''</code></td>
+      <td>
+        Iconify icon id within the family (for example <code>chevron-right</code>).
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+### Item shape
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>text</code></td>
+      <td><code>string</code></td>
+      <td>Label shown for the segment (link text or final crumb).</td>
+    </tr>
+    <tr>
+      <td><code>href</code></td>
+      <td><code>string</code></td>
+      <td>Destination for link segments; not used as a link for the last item.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Custom divider
+
+<Canvas of={BreadcrumbsStories.CustomDivider} />
+
+### Icon divider
+
+<Canvas of={BreadcrumbsStories.IconDivider} />
+
+### Two levels
+
+<Canvas of={BreadcrumbsStories.TwoLevels} />
+
+### Single crumb
+
+<Canvas of={BreadcrumbsStories.SingleCrumb} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Breadcrumbs from '$lib/components/Breadcrumbs/Breadcrumbs.svelte';
+
+  const breadcrumbItems = [
+    { text: 'Home', href: '/' },
+    { text: 'Settings', href: '/settings' },
+    { text: 'Profile', href: '' },
+  ];
+</script>
+
+<Breadcrumbs {breadcrumbItems} />
+
+<Breadcrumbs {breadcrumbItems} divider="›" />
+
+<Breadcrumbs {breadcrumbItems} iconFamily="mdi" iconName="chevron-right" />
+```
+
+## Usage as a custom element
+
+<code>garnet-breadcrumbs</code> comes from <code>customElement="garnet-breadcrumbs"</code>. Arrays such as{' '}
+<code>breadcrumbItems</code> are easier to set from Svelte or JavaScript (property assignment after
+upgrade) than from static HTML alone.
+
+## Accessibility
+
+- The trail is a list (<code>&lt;ul&gt;</code> / <code>&lt;li&gt;</code>), which helps screen readers
+  treat segments as a related sequence.
+- Only non-final segments are links, which matches the common “current page is not a link” pattern.
+- Consider wrapping the component in a <code>&lt;nav&gt;</code> (or adding <code>aria-label</code>) in
+  the parent layout if this is the primary breadcrumb navigation for the page.
