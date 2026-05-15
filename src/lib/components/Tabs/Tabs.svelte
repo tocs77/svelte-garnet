@@ -9,16 +9,17 @@
   }
   export let activeTabValue = 0;
   export let items: TabItem[] = [];
+  export let vertical = false;
   if (items == null) {
     items = tabItems;
   }
   const handleClick = (tabValue: number) => () => (activeTabValue = tabValue);
 </script>
 
-<div class="garnet-tabs">
-  <ul>
+<div class="garnet-tabs" class:vertical>
+  <ul class:vertical>
     {#each Object.entries(items) as [_, item]}
-      <li class={activeTabValue === item.id ? 'active' : ''} data-testid="tabHeader">
+      <li class:vertical class={activeTabValue === item.id ? 'active' : ''} data-testid="tabHeader">
         <button type="button" class="tab-trigger" on:click={handleClick(item.id)}>
           {JSON.stringify(item.name).replace(/['"]+/g, '')}
         </button>
@@ -77,5 +78,23 @@
   .content {
     padding: 10px;
     min-height: 300px;
+  }
+
+  /* variant */
+  .garnet-tabs.vertical {
+    display: flex;
+    flex-direction: row;
+  }
+  ul.vertical {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #dee2e6;
+    border-bottom: none;
+    margin-top: 0;
+  }
+  ul.vertical button.tab-trigger {
+    border-radius: 0;
+    border-right: 0;
+    border-color: #dee2e6;
   }
 </style>

@@ -21,10 +21,12 @@ const meta = {
   args: {
     activeTabValue: 1,
     items: tabItems as TabItem[],
+    vertical: false,
   },
   argTypes: {
     activeTabValue: { control: 'number' },
     items: { control: 'object' },
+    vertical: { control: 'boolean' },
   },
 } satisfies Meta<typeof Tabs>;
 
@@ -57,5 +59,19 @@ export const SingleTab: Story = {
   args: {
     items: [{ id: 1, name: 'Dashboard', text: 'Only one tab panel is shown here.' }],
     activeTabValue: 1,
+  },
+};
+
+export const Vertical: Story = {
+  args: {
+    vertical: true,
+  },
+};
+
+export const VerticalTwoTabs: Story = {
+  args: {
+    items: twoTabs,
+    activeTabValue: 1,
+    vertical: true,
   },
 };

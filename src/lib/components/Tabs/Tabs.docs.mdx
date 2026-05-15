@@ -7,19 +7,25 @@ import * as TabsStories from './Tabs.stories';
 <Title>Tabs</Title>
 
 <Subtitle>
-  Horizontal tab list with a single visible panel, registered as the `garnet-tabs` custom element. In
-  Storybook it is grouped under <strong>Navigation → Tabs</strong>. Each entry in `items` supplies an
-  `id`, header `name`, and body `text`. `activeTabValue` must match one of those `id` values to choose
-  which tab is highlighted and which body text is shown. When `items` is null or missing at init, the
-  component falls back to `tabsdata.json`.
+  Tab list with a single visible panel, registered as the `garnet-tabs` custom element. In Storybook it
+  is grouped under <strong>Navigation → Tabs</strong>. By default the headers run horizontally above
+  the content; set `vertical` to `true` for a sidebar-style list with the panel beside it. Each entry in
+  `items` supplies an `id`, header `name`, and body `text`. `activeTabValue` must match one of those `id`
+  values to choose which tab is highlighted and which body text is shown. When `items` is null or
+  missing at init, the component falls back to `tabsdata.json`.
 </Subtitle>
 
 ## Overview
 
-`Tabs` renders `.garnet-tabs` with a `<ul>` of tab headers and a `.content` region below. Each header is
-a `<button type="button" class="tab-trigger">` that sets `activeTabValue` to that row’s `item.id` on
+`Tabs` renders `.garnet-tabs` with a `<ul>` of tab headers and a `.content` region. Each header is a
+`<button type="button" class="tab-trigger">` that sets `activeTabValue` to that row’s `item.id` on
 click. The active header gets the `active` class on its parent `<li>`. Panel copy is plain text from
 `item.text` for the row whose `id` equals `activeTabValue`.
+
+With `vertical` false (default), the root uses a column flex layout: the list sits above the panel,
+with a bottom border on the list. With `vertical` true, the root adds a `vertical` class and uses a row
+flex layout; the list becomes a column with a right border instead of a bottom border, and tab button
+corners are squared for the sidebar look.
 
 Labels and body strings are passed through `JSON.stringify(...).replace(/['"]+/g, '')` in the current
 implementation (a simple way to strip quotes from string values in the template).
@@ -38,16 +44,17 @@ implementation (a simple way to strip quotes from string values in the template)
 | ----------------- | ----------- | -------------------- | --------------------------------------------------------------------------- |
 | `activeTabValue`  | `number`    | `0`                  | Must match an `id` in `items` for that tab to appear selected and visible.  |
 | `items`           | `TabItem[]` | `[]` (then JSON)     | Tab definitions; if unset at init, `tabsdata.json` is used.                 |
+| `vertical`        | `boolean`   | `false`              | When `true`, tab labels stack vertically and the panel sits to the right.    |
 
 ### `TabItem`
 
 Defined in `Tabs.svelte` (not exported):
 
-| Field    | Type     | Description                          |
-| -------- | -------- | ------------------------------------ |
-| `id`     | `number` | Stable identifier for selection.     |
-| `name`   | `string` | Label shown on the tab button.       |
-| `text`   | `string` | Body copy when this tab is active.   |
+| Field  | Type     | Description                        |
+| ------ | -------- | ---------------------------------- |
+| `id`   | `number` | Stable identifier for selection.   |
+| `name` | `string` | Label shown on the tab button.     |
+| `text` | `string` | Body copy when this tab is active. |
 
 Ensure every `id` in `items` is unique so exactly one tab can match `activeTabValue`. The default
 `activeTabValue` of `0` does not match the sample JSON (ids `1`–`3`); set `activeTabValue` explicitly or
@@ -71,6 +78,14 @@ align ids with `0` in your data. Storybook defaults use `activeTabValue: 1` for 
 
 <Canvas of={TabsStories.SingleTab} />
 
+### Vertical
+
+<Canvas of={TabsStories.Vertical} />
+
+### Vertical (two tabs)
+
+<Canvas of={TabsStories.VerticalTwoTabs} />
+
 ## Usage in Svelte
 
 ```svelte
@@ -86,13 +101,15 @@ align ids with `0` in your data. Storybook defaults use `activeTabValue: 1` for 
 </script>
 
 <Tabs {items} bind:activeTabValue />
+
+<Tabs {items} bind:activeTabValue vertical />
 ```
 
 ## Usage as a custom element
 
 `<garnet-tabs>` comes from `customElement="garnet-tabs"`. Arrays such as `items` and numeric
-`activeTabValue` are easiest to set from Svelte or JavaScript property assignment rather than static
-HTML attributes alone.
+`activeTabValue`, plus boolean `vertical`, are easiest to set from Svelte or JavaScript property
+assignment rather than static HTML attributes alone.
 
 ## Accessibility
 

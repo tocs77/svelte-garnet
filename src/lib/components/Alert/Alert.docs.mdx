@@ -1,0 +1,101 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as AlertStories from './Alert.stories';
+
+<Meta of={AlertStories} name="Docs" />
+
+<Title>Alert</Title>
+
+<Subtitle>
+  Inline dismissible message registered as the `garnet-alert` custom element. In Storybook it is
+  grouped under <strong>Action Components → Alert</strong>. The body uses a native `dialog` with
+  `role="alert"` on the content row. The title is rendered in a `strong` element; the description
+  follows as plain text. Closing sets `show` to `false`, which removes the dialog until the parent
+  sets `show` back to `true` (for example via Storybook controls).
+</Subtitle>
+
+## Overview
+
+`Alert` renders inside `.garnet`. When `show` is `true`, a `dialog` shows with optional leading icon
+(`Icon` maps `type` to built-in SVG paths), a message column (`title` + `description`), and a close
+control (Unicode ×, not an icon font). The `type` prop selects a CSS class for background and text
+color (`warn`, `dark`, `error`, `info`, `success`, or default when empty). When `showAnimation` is
+`true`, a `fade-in` class applies a short opacity animation.
+
+Styles live in the component `<style>` block next to `Alert.svelte`.
+
+## Default
+
+<Canvas of={AlertStories.Default} />
+
+## Props
+
+<Controls of={AlertStories.Default} />
+
+| Prop              | Type      | Default     | Description                                                                 |
+| ----------------- | --------- | ----------- | --------------------------------------------------------------------------- |
+| `show`            | `boolean` | (required) | When `false`, nothing is rendered. Set back to `true` to show again.         |
+| `showIcon`        | `boolean` | `true`     | When `true`, renders `Icon` with `iconType` equal to `type`.                 |
+| `type`            | `string`  | `''`       | One of `warn`, `dark`, `error`, `info`, `success`, or empty for default look. |
+| `title`           | `string`  | `''`       | Bold heading line.                                                           |
+| `description`     | `string`  | `''`       | Supporting text below the title.                                             |
+| `showAnimation`   | `boolean` | `true`     | When `true`, adds the `fade-in` animation class.                             |
+
+## Examples
+
+### Success
+
+<Canvas of={AlertStories.Success} />
+
+### Warning
+
+<Canvas of={AlertStories.Warning} />
+
+### Error
+
+<Canvas of={AlertStories.Error} />
+
+### Without icon
+
+<Canvas of={AlertStories.WithoutIcon} />
+
+### No animation
+
+<Canvas of={AlertStories.NoAnimation} />
+
+### Neutral (no semantic type)
+
+<Canvas of={AlertStories.Neutral} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Alert from '$lib/components/Alert/Alert.svelte';
+
+  let show = true;
+</script>
+
+<Alert
+  bind:show
+  type="info"
+  title="Heads up"
+  description="Your session will expire in five minutes."
+/>
+
+<Alert bind:show type="success" title="Done" description="Profile updated." showIcon={false} />
+```
+
+## Usage as a custom element
+
+`<garnet-alert>` comes from `customElement="garnet-alert"`. Boolean and string props are typically set
+as properties on the element for reliable two-way behavior with `show`. After the user dismisses the
+alert, set `show` back to `true` from your app or Storybook controls if you need to show it again.
+
+## Accessibility
+
+- Message content is wrapped in a region with `role="alert"` so assistive technologies can treat it
+  as an assertive notification.
+- Dismissal uses a native `<button type="button">`. The visible label is the × character; if you need a
+  clearer name for screen readers, extend the component with `aria-label` (or equivalent) on that
+  control.
