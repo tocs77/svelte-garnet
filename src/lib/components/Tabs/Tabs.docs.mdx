@@ -1,0 +1,103 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as TabsStories from './Tabs.stories';
+
+<Meta of={TabsStories} name="Docs" />
+
+<Title>Tabs</Title>
+
+<Subtitle>
+  Horizontal tab list with a single visible panel, registered as the `garnet-tabs` custom element. In
+  Storybook it is grouped under <strong>Navigation → Tabs</strong>. Each entry in `items` supplies an
+  `id`, header `name`, and body `text`. `activeTabValue` must match one of those `id` values to choose
+  which tab is highlighted and which body text is shown. When `items` is null or missing at init, the
+  component falls back to `tabsdata.json`.
+</Subtitle>
+
+## Overview
+
+`Tabs` renders `.garnet-tabs` with a `<ul>` of tab headers and a `.content` region below. Each header is
+a `<button type="button" class="tab-trigger">` that sets `activeTabValue` to that row’s `item.id` on
+click. The active header gets the `active` class on its parent `<li>`. Panel copy is plain text from
+`item.text` for the row whose `id` equals `activeTabValue`.
+
+Labels and body strings are passed through `JSON.stringify(...).replace(/['"]+/g, '')` in the current
+implementation (a simple way to strip quotes from string values in the template).
+
+`data-testid="tabHeader"` is set on each list item; `data-testid="tabContent"` is on the panel wrapper.
+
+## Default
+
+<Canvas of={TabsStories.Default} />
+
+## Props
+
+<Controls of={TabsStories.Default} />
+
+| Prop              | Type        | Default              | Description                                                                 |
+| ----------------- | ----------- | -------------------- | --------------------------------------------------------------------------- |
+| `activeTabValue`  | `number`    | `0`                  | Must match an `id` in `items` for that tab to appear selected and visible.  |
+| `items`           | `TabItem[]` | `[]` (then JSON)     | Tab definitions; if unset at init, `tabsdata.json` is used.                 |
+
+### `TabItem`
+
+Defined in `Tabs.svelte` (not exported):
+
+| Field    | Type     | Description                          |
+| -------- | -------- | ------------------------------------ |
+| `id`     | `number` | Stable identifier for selection.     |
+| `name`   | `string` | Label shown on the tab button.       |
+| `text`   | `string` | Body copy when this tab is active.   |
+
+Ensure every `id` in `items` is unique so exactly one tab can match `activeTabValue`. The default
+`activeTabValue` of `0` does not match the sample JSON (ids `1`–`3`); set `activeTabValue` explicitly or
+align ids with `0` in your data. Storybook defaults use `activeTabValue: 1` for the bundled stories.
+
+## Examples
+
+### Second tab active
+
+<Canvas of={TabsStories.SecondTabActive} />
+
+### Third tab active
+
+<Canvas of={TabsStories.ThirdTabActive} />
+
+### Two tabs
+
+<Canvas of={TabsStories.TwoTabs} />
+
+### Single tab
+
+<Canvas of={TabsStories.SingleTab} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Tabs from '$lib/components/Tabs/Tabs.svelte';
+
+  const items = [
+    { id: 1, name: 'Home', text: 'Welcome.' },
+    { id: 2, name: 'Settings', text: 'Preferences here.' },
+  ];
+
+  let activeTabValue = 1;
+</script>
+
+<Tabs {items} bind:activeTabValue />
+```
+
+## Usage as a custom element
+
+`<garnet-tabs>` comes from `customElement="garnet-tabs"`. Arrays such as `items` and numeric
+`activeTabValue` are easiest to set from Svelte or JavaScript property assignment rather than static
+HTML attributes alone.
+
+## Accessibility
+
+- Tab headers use native `<button type="button">`, so they are focusable and activatable with keyboard
+  without extra handlers.
+- For stricter tab semantics (screen reader “tab” / “tabpanel” relationships, `aria-selected`, roving
+  `tabindex`), consider layering ARIA roles and ids in a future revision; the current markup is a
+  simple button list plus one content region.
