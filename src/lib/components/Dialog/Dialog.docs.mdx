@@ -1,0 +1,96 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as DialogStories from './Dialog.stories';
+
+<Meta of={DialogStories} name="Docs" />
+
+<Title>Dialog</Title>
+
+<Subtitle>
+  Centered modal panel registered as the `garnet-dialog` custom element. In Storybook it is grouped
+  under <strong>Action Components → Dialog</strong>. A trigger button toggles visibility; when open,
+  a fixed panel shows `modalTitle` and `modalText` with an optional dimmed backdrop. The header close
+  control uses `Close.svelte` (`garnet-close`) and sets `showDialog` to `false`.
+</Subtitle>
+
+## Overview
+
+`Dialog` renders a **Show dialog** button that toggles `showDialog`. When `showDialog` is `true`, content
+inside `.garnet-dialog` appears: an optional full-viewport `#background` overlay (when `showBackground`
+is `true`) and a centered `#modal` card with a header row (`h3` + close button) and a body paragraph.
+Closing via the header × sets `showDialog` to `false`; use the trigger or Storybook controls to open it
+again.
+
+Styles live in the component `<style>` block next to `Dialog.svelte`.
+
+## Default
+
+<Canvas of={DialogStories.Default} />
+
+## Props
+
+<Controls of={DialogStories.Default} />
+
+| Prop              | Type      | Default                         | Description                                                          |
+| ----------------- | --------- | ------------------------------- | -------------------------------------------------------------------- |
+| `showDialog`      | `boolean` | `true`                          | When `true`, the modal panel (and optional backdrop) is visible.      |
+| `showBackground`  | `boolean` | `false`                         | When `true`, renders a dimmed, blurred full-screen backdrop.         |
+| `modalTitle`      | `string`  | `'Modal title'`                 | Heading shown in the modal header.                                   |
+| `modalText`       | `string`  | `'Click on the X to close me'`  | Body copy shown below the header.                                    |
+
+## Examples
+
+### With background
+
+<Canvas of={DialogStories.WithBackground} />
+
+### Closed
+
+<Canvas of={DialogStories.Closed} />
+
+### Custom content
+
+<Canvas of={DialogStories.CustomContent} />
+
+### Long text
+
+<Canvas of={DialogStories.LongText} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Dialog from '$lib/components/Dialog/Dialog.svelte';
+
+  let showDialog = false;
+</script>
+
+<Dialog
+  bind:showDialog
+  showBackground
+  modalTitle="Confirm action"
+  modalText="Are you sure you want to continue?"
+/>
+
+<Dialog
+  bind:showDialog
+  modalTitle="Welcome"
+  modalText="Thanks for signing up."
+/>
+```
+
+## Usage as a custom element
+
+`<garnet-dialog>` comes from `customElement="garnet-dialog"`. Boolean and string props are typically set
+as properties on the element for reliable behavior with `showDialog`. After the user closes the modal,
+set `showDialog` back to `true` from your app or Storybook controls, or use the built-in **Show dialog**
+button to toggle visibility.
+
+## Accessibility
+
+- The modal is implemented with positioned `div` elements rather than the native `<dialog>` element; consider
+  adding focus trap, `aria-modal`, and initial focus management if you use this in production flows.
+- The header close control delegates to `Close.svelte`, which renders a `<button>` with
+  `aria-label="Close"` and an SVG icon marked `aria-hidden="true"`.
+- The trigger uses a plain `<button>` with visible text **Show dialog**; pair it with clear copy in
+  `modalTitle` and `modalText` so the purpose of the overlay is obvious.
