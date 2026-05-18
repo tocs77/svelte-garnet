@@ -1,0 +1,164 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as AlarmStories from './Alarm.stories';
+
+<Meta of={AlarmStories} name="Docs" />
+
+<Title>Alarm</Title>
+
+<Subtitle>
+  Notification bell with a numeric badge, registered as the <code>garnet-alarm</code> custom element. In
+  Storybook it is grouped under <strong>Action Components → Alarm</strong>. A heading shows{' '}
+  <code>label</code>; a circular count and SVG bell sit below. When <code>notifications</code> is greater
+  than zero, the bell plays a shake animation; the count updates with a <code>scale</code> transition.
+</Subtitle>
+
+## Overview
+
+<code>Alarm</code> renders <code>.garnet-alarm</code> with an <code>&lt;h3&gt;</code> for <code>label</code>{' '}
+and a <code>.notifications</code> region. The badge (`.count`) displays <code>notifications</code> and
+uses CSS variables <code>--countColor</code> and <code>--countBackgroundColor</code> from props. A{' '}
+<code>#key</code> block re-runs the <code>scale</code> transition whenever the count changes.
+
+The bell SVG toggles <code>filled</code> vs <code>outline</code> via the <code>filled</code> prop. Class{' '}
+<code>ring</code> is applied when <code>notifications &gt; 0</code>, enabling the <code>ring</code> keyframe
+animation. <code>small</code> shrinks the bell and repositions the badge for a compact layout.
+
+Styles live in the component <code>&lt;style&gt;</code> block next to <code>Alarn.svelte</code>.
+
+## Default
+
+<Canvas of={AlarmStories.Default} />
+
+## Props
+
+<Controls of={AlarmStories.Default} />
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>notifications</code></td>
+      <td><code>number</code></td>
+      <td><code>26</code></td>
+      <td>
+        Value shown in the badge. When greater than zero, the bell gets the <code>ring</code> animation
+        class.
+      </td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td><code>'This is a test label'</code></td>
+      <td>
+        Text for the <code>&lt;h3&gt;</code> above the bell.
+      </td>
+    </tr>
+    <tr>
+      <td><code>countColor</code></td>
+      <td><code>string</code></td>
+      <td><code>'#733635'</code></td>
+      <td>
+        Badge text color (CSS variable <code>--countColor</code>).
+      </td>
+    </tr>
+    <tr>
+      <td><code>countBackgroundColor</code></td>
+      <td><code>string</code></td>
+      <td><code>'#f4f4f4'</code></td>
+      <td>
+        Badge background color (CSS variable <code>--countBackgroundColor</code>).
+      </td>
+    </tr>
+    <tr>
+      <td><code>filled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>
+        When <code>true</code>, the bell SVG uses solid fill; otherwise stroke-only outline.
+      </td>
+    </tr>
+    <tr>
+      <td><code>small</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>
+        When <code>true</code>, renders a smaller bell and compact badge positioning.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### No notifications
+
+<Canvas of={AlarmStories.NoNotifications} />
+
+### Single notification
+
+<Canvas of={AlarmStories.SingleNotification} />
+
+### High count
+
+<Canvas of={AlarmStories.HighCount} />
+
+### Filled
+
+<Canvas of={AlarmStories.Filled} />
+
+### Small
+
+<Canvas of={AlarmStories.Small} />
+
+### Custom colors
+
+<Canvas of={AlarmStories.CustomColors} />
+
+### Long label
+
+<Canvas of={AlarmStories.LongLabel} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Alarm from '$lib/components/Alarm/Alarn.svelte';
+
+  let notifications = $state(3);
+</script>
+
+<Alarm {notifications} label="Messages" />
+
+<Alarm
+  notifications={0}
+  label="Quiet mode"
+  filled
+  small
+  countColor="#ffffff"
+  countBackgroundColor="#265573"
+/>
+```
+
+## Usage as a custom element
+
+<code>garnet-alarm</code> comes from <code>customElement="garnet-alarm"</code>. Set <code>notifications</code>,{' '}
+<code>label</code>, colors, <code>filled</code>, and <code>small</code> as properties on the element. Prefer
+numeric <code>notifications</code> from JavaScript rather than string attributes when possible.
+
+## Accessibility
+
+- The bell is decorative SVG without an accessible name; provide context with <code>label</code> or an{' '}
+  <code>aria-label</code> on a wrapping control if this becomes a button.
+- Consider <code>aria-live="polite"</code> on the count region when <code>notifications</code> changes so
+  screen-reader users hear updates.
+- Continuous <code>ring</code> animation may distract some users; respect{' '}
+  <code>prefers-reduced-motion</code> by disabling the animation in a future revision if you use this in
+  production.
