@@ -1,0 +1,180 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as ProgressBarStories from './ProgressBar.stories';
+
+<Meta of={ProgressBarStories} name="Docs" />
+
+<Title>ProgressBar</Title>
+
+<Subtitle>
+  Animated percentage bar registered as the <code>garnet-progressbar</code> custom element. In Storybook
+  it is grouped under <strong>Basic Components → ProgressBar</strong>. The fill width and displayed
+  percent tween toward <code>progressAmt</code> using Svelte’s <code>Tween</code> class. Labels can sit
+  inside the bar or above it with a separate caption.
+</Subtitle>
+
+## Overview
+
+<code>ProgressBar</code> wraps a <code>.garnet-progressbar</code> container with two layout modes. When
+<code>labelInside</code> is <code>true</code>, the percent text sits inside a pill-shaped fill whose
+width tracks <code>progress.current</code>. When <code>false</code>, a row above the track shows
+<code>labelTextOutside</code> and the percent; the bar is a fixed-height strip below.
+
+Motion is driven by <code>Tween</code> from <code>svelte/motion</code>. An <code>$effect</code> calls
+<code>progress.set(Number(progressAmt), …)</code> whenever props change. With <code>animate</code>{' '}
+<code>true</code>, <code>tweenDuration</code> and <code>easing</code> control the transition; with{' '}
+<code>animate</code> <code>false</code>, <code>duration</code> is <code>0</code> so the bar jumps
+immediately. The bar color comes from the <code>color</code> prop on the fill element.
+
+Styles live in the component <code>&lt;style&gt;</code> block next to <code>ProgressBar.svelte</code>.
+
+## Default
+
+<Canvas of={ProgressBarStories.Default} />
+
+## Props
+
+<Controls of={ProgressBarStories.Default} />
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>progressAmt</code></td>
+      <td><code>number</code></td>
+      <td><code>52</code></td>
+      <td>
+        Target completion percentage (0–100). The bar tweens <code>progress.current</code> toward this
+        value.
+      </td>
+    </tr>
+    <tr>
+      <td><code>tweenDuration</code></td>
+      <td><code>number</code></td>
+      <td><code>400</code></td>
+      <td>
+        Animation length in milliseconds when <code>animate</code> is <code>true</code>. Passed to each{' '}
+        <code>progress.set</code> call.
+      </td>
+    </tr>
+    <tr>
+      <td><code>animate</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>
+        When <code>false</code>, updates use <code>duration: 0</code> for instant width changes.
+      </td>
+    </tr>
+    <tr>
+      <td><code>labelInside</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>
+        When <code>true</code>, percent text is centered inside the growing fill; when <code>false</code>,
+        caption and percent sit above a slim bar.
+      </td>
+    </tr>
+    <tr>
+      <td><code>labelTextOutside</code></td>
+      <td><code>string</code></td>
+      <td><code>'This is a test'</code></td>
+      <td>
+        Left caption in outside-label mode (<code>labelInside</code> <code>false</code>).
+      </td>
+    </tr>
+    <tr>
+      <td><code>easing</code></td>
+      <td><code>(t: number) =&gt; number</code></td>
+      <td><code>cubicOut</code> from <code>svelte/easing</code></td>
+      <td>
+        Easing function for the tween. Not exposed in Storybook controls; set from Svelte when needed.
+      </td>
+    </tr>
+    <tr>
+      <td><code>color</code></td>
+      <td><code>string</code></td>
+      <td><code>'#733635'</code></td>
+      <td>
+        CSS color for the filled portion of the bar (<code>background-color</code>).
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Empty
+
+<Canvas of={ProgressBarStories.Empty} />
+
+### Complete
+
+<Canvas of={ProgressBarStories.Complete} />
+
+### Quarter
+
+<Canvas of={ProgressBarStories.Quarter} />
+
+### Label outside
+
+<Canvas of={ProgressBarStories.LabelOutside} />
+
+### No animation
+
+<Canvas of={ProgressBarStories.NoAnimation} />
+
+### Slow tween
+
+<Canvas of={ProgressBarStories.SlowTween} />
+
+### Custom color
+
+<Canvas of={ProgressBarStories.CustomColor} />
+
+### Long outside label
+
+<Canvas of={ProgressBarStories.LongOutsideLabel} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import ProgressBar from '$lib/components/ProgressBar/ProgressBar.svelte';
+
+  let progressAmt = $state(0);
+
+  function tick() {
+    progressAmt = Math.min(100, progressAmt + 10);
+  }
+</script>
+
+<button type="button" onclick={tick}>Advance</button>
+
+<ProgressBar {progressAmt} labelInside={false} labelTextOutside="Uploading files…" />
+
+<ProgressBar progressAmt={100} color="#265573" tweenDuration={800} />
+```
+
+## Usage as a custom element
+
+<code>garnet-progressbar</code> comes from <code>customElement="garnet-progressbar"</code>. Set numeric
+and boolean props as element properties from JavaScript or Svelte. Values such as <code>progressAmt</code>{' '}
+and <code>tweenDuration</code> should be numbers, not strings, for predictable tweening. The{' '}
+<code>easing</code> function is easiest to supply from Svelte rather than from static HTML.
+
+## Accessibility
+
+- Expose progress with a native <code>&lt;progress&gt;</code> or <code>role="progressbar"</code> with{' '}
+  <code>aria-valuenow</code>, <code>aria-valuemin</code>, and <code>aria-valuemax</code> if you rely on
+  this component for load status; the current markup is visual only.
+- Percent text updates as the tween runs; pair it with a live region if screen-reader users need
+  frequent announcements without overwhelming chatter.
+- Prefer sufficient contrast between <code>color</code> and the track background for the outside-label
+  layout where the fill is only 10px tall.
