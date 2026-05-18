@@ -1,0 +1,188 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as TableStories from './Table.stories';
+
+<Meta of={TableStories} name="Docs" />
+
+<Title>Table</Title>
+
+<Subtitle>
+  Labeled CSS grid of cells, registered as the `garnet-table` custom element. In Storybook it is grouped
+  under <strong>Basic Components → Table</strong>. A heading (`label`) sits above a `Grid` (`garnet-grid`)
+  that lays out `itemCount` `Cell` instances (`garnet-cell`). Cells can show empty bordered boxes or a
+  shared placeholder image with an optional caption.
+</Subtitle>
+
+## Overview
+
+`Table` composes `Grid.svelte` and `Cell.svelte`. It renders an `<h1>` with `label`, then passes
+`columnCount` and `rowCount` to `Grid` as `columns` and `rows`, along with `border`. It iterates
+`itemCount` times and mounts one `Cell` per iteration, forwarding `displayImages`, `imageLabel`, and
+`displayImageLabels`.
+
+`Grid` uses CSS `display: grid` with `grid-auto-flow: column`, so items fill column-first across
+`columns` tracks and `rows` row tracks. The grid container also has a default `1px solid #000000` border
+in its scoped styles; the inline `border` style from props overrides the outer edge when set.
+
+When `displayImages` is `false`, each `Cell` exposes a default slot (unused by `Table` today, so cells
+appear as empty bordered regions). When `displayImages` is `true`, each cell shows `noimage.jpg` with
+`alt="placeholder"` and `data-testid="placeholderImage"`. With `displayImageLabels` true, a dark
+overlay at the bottom of the image shows `imageLabel`.
+
+## Default
+
+<Canvas of={TableStories.Default} />
+
+## Props
+
+<Controls of={TableStories.Default} />
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>columnCount</code></td>
+      <td><code>number</code></td>
+      <td><code>4</code></td>
+      <td>
+        Passed to <code>Grid</code> as <code>columns</code> (<code>grid-template-columns</code>).
+      </td>
+    </tr>
+    <tr>
+      <td><code>rowCount</code></td>
+      <td><code>number</code></td>
+      <td><code>4</code></td>
+      <td>
+        Passed to <code>Grid</code> as <code>rows</code> (<code>grid-template-rows</code>).
+      </td>
+    </tr>
+    <tr>
+      <td><code>itemCount</code></td>
+      <td><code>number</code></td>
+      <td><code>0</code></td>
+      <td>
+        How many <code>Cell</code> components to render inside the grid.
+      </td>
+    </tr>
+    <tr>
+      <td><code>border</code></td>
+      <td><code>string</code></td>
+      <td><code>''</code></td>
+      <td>
+        Inline border on the grid container; empty string leaves grid styling only.
+      </td>
+    </tr>
+    <tr>
+      <td><code>displayImages</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>
+        When <code>true</code>, each cell shows the bundled placeholder image.
+      </td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td><code>'Test Label'</code></td>
+      <td>
+        Text for the <code>&lt;h1&gt;</code> above the grid.
+      </td>
+    </tr>
+    <tr>
+      <td><code>imageLabel</code></td>
+      <td><code>string</code></td>
+      <td><code>'untitled'</code></td>
+      <td>
+        Caption when <code>displayImageLabels</code> is <code>true</code>.
+      </td>
+    </tr>
+    <tr>
+      <td><code>displayImageLabels</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>
+        When <code>true</code> with <code>displayImages</code>, shows <code>imageLabel</code> over the
+        image.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+Storybook defaults set `itemCount` to `16` so the 4×4 grid shows cells; the component default alone
+renders an empty grid.
+
+## Examples
+
+### Two by two
+
+<Canvas of={TableStories.TwoByTwo} />
+
+### With images
+
+<Canvas of={TableStories.WithImages} />
+
+### With image labels
+
+<Canvas of={TableStories.WithImageLabels} />
+
+### Empty
+
+<Canvas of={TableStories.Empty} />
+
+### Single cell
+
+<Canvas of={TableStories.SingleCell} />
+
+### Custom border
+
+<Canvas of={TableStories.CustomBorder} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Table from '$lib/components/Table/Table.svelte';
+</script>
+
+<Table
+  label="Photo gallery"
+  columnCount={3}
+  rowCount={2}
+  itemCount={6}
+  displayImages
+  displayImageLabels
+  imageLabel="Untitled"
+/>
+
+<Table
+  label="Layout sketch"
+  columnCount={2}
+  rowCount={2}
+  itemCount={4}
+  border="2px dashed #265573"
+/>
+```
+
+## Usage as a custom element
+
+`<garnet-table>` comes from `customElement="garnet-table"`. Set numeric and boolean props as element
+properties from JavaScript or Svelte for reliable updates. Child primitives are also available as
+`<garnet-grid>` and `<garnet-cell>` if you compose layouts manually; `Table` wires them together with
+the props above.
+
+## Accessibility
+
+- The section title uses a native `<h1>`; use a single logical heading level per page when embedding
+  this component.
+- Placeholder images use a fixed `alt="placeholder"`; for real content, prefer composing `Cell` with
+  meaningful `alt` text or slot content instead of the demo image mode.
+- The grid is a visual layout only; it is not a semantic HTML `<table>`. For tabular data with row and
+  column headers, use `<table>` markup or add appropriate ARIA roles if you need screen-reader table
+  navigation.
