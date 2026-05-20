@@ -1,0 +1,157 @@
+import { Meta, Title, Subtitle, Controls, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as SwitchStories from './Switch.stories';
+
+<Meta of={SwitchStories} name="Docs" />
+
+<Title>Switch</Title>
+
+<Subtitle>
+  Toggle control registered as the <code>garnet-switch</code> custom element. In Storybook it is grouped
+  under <strong>Basic Components → Switch</strong>. It renders a checkbox input styled as a switch track
+  and thumb, with an optional text label and disabled state.
+</Subtitle>
+
+## Overview
+
+<code>Switch</code> wraps a native <code>&lt;input type="checkbox"&gt;</code> inside a
+<code>&lt;label&gt;</code>. The checkbox is visually hidden but still drives state via
+<code>bind:checked=&#123;isChecked&#125;</code>. The visual track/thumb is a sibling <code>&lt;span&gt;</code> that
+uses <code>::before</code> and <code>::after</code> pseudo-elements; checked state moves the thumb and
+changes track color.
+
+Container classes are composed from <code>switch-container</code>, optional custom <code>css</code>, and
+<code>disabled</code>. The visual span classes are composed from <code>switch</code> and optional
+<code>switch-&#123;size&#125;</code>. Disabled mode dims the control and changes cursor behavior.
+
+Styles live in the component <code>&lt;style&gt;</code> block next to <code>Switch.svelte</code>.
+
+## Default
+
+<Canvas of={SwitchStories.Default} />
+
+## Props
+
+<Controls of={SwitchStories.Default} />
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>id</code></td>
+      <td><code>string</code></td>
+      <td><code>''</code></td>
+      <td>
+        Forwarded to the checkbox and paired with <code>for</code> on the wrapper label.
+      </td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>string</code></td>
+      <td><code>''</code></td>
+      <td>
+        Visible text shown to the right of the switch.
+      </td>
+    </tr>
+    <tr>
+      <td><code>css</code></td>
+      <td><code>string</code></td>
+      <td><code>''</code></td>
+      <td>
+        Additional class name appended to the container for custom styling hooks.
+      </td>
+    </tr>
+    <tr>
+      <td><code>size</code></td>
+      <td><code>string</code></td>
+      <td><code>''</code></td>
+      <td>
+        Appends <code>switch-&#123;size&#125;</code> to the visual span for size variants defined by your app styles.
+      </td>
+    </tr>
+    <tr>
+      <td><code>isChecked</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>
+        Bound checked state of the underlying checkbox.
+      </td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>
+        Disables interaction and applies disabled styles.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Checked
+
+<Canvas of={SwitchStories.Checked} />
+
+### Disabled
+
+<Canvas of={SwitchStories.Disabled} />
+
+### Checked disabled
+
+<Canvas of={SwitchStories.CheckedDisabled} />
+
+### No label
+
+<Canvas of={SwitchStories.NoLabel} />
+
+### Long label
+
+<Canvas of={SwitchStories.LongLabel} />
+
+### Custom id
+
+<Canvas of={SwitchStories.CustomId} />
+
+## Usage in Svelte
+
+```svelte
+<script lang="ts">
+  import Switch from '$lib/components/Switch/Switch.svelte';
+
+  let isChecked = false;
+</script>
+
+<Switch
+  id="email-updates"
+  label="Email updates"
+  bind:isChecked
+/>
+
+<Switch
+  id="readonly-toggle"
+  label="Locked setting"
+  isChecked={true}
+  disabled
+/>
+```
+
+## Usage as a custom element
+
+<code>garnet-switch</code> comes from <code>customElement="garnet-switch"</code>. Set
+<code>id</code>, <code>label</code>, <code>css</code>, <code>size</code>, <code>isChecked</code>, and
+<code>disabled</code> as element properties from JavaScript or Svelte.
+
+## Accessibility
+
+- The control uses a native checkbox with <code>role="switch"</code>, so it supports keyboard interaction.
+- Keep <code>label</code> meaningful (or provide external labeling) so screen readers announce purpose.
+- Ensure unique <code>id</code> values when rendering multiple switches in one view.
